@@ -1,0 +1,12 @@
+dist: trusty
+before_install:
+  - npm install -g npm@latest
+  - npm set progress=false
+language: node_js
+node_js:
+  - "4.3"
+after_success:
+  - npm run semantic-release
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
