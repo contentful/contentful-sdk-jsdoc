@@ -2,6 +2,7 @@
 set -e
 
 REPO_NAME=$1
+NAMESPACE=$2
 PAGES_DIR=./gh-pages
 DOCS_DIR=./out
 REPO="https://${GH_TOKEN}@github.com/contentful/${REPO_NAME}.git"
@@ -20,9 +21,9 @@ if [ ! -d $PAGES_DIR ] ; then
 fi
 
 cp -r $DOCS_DIR/* $PAGES_DIR
-rm -rf $PAGES_DIR/contentful/latest
-cp -r $DOCS_DIR/contentful/$VERSION $PAGES_DIR/contentful/latest
-echo "<meta http-equiv=\"refresh\" content=\"0; url=https://contentful.github.io/${REPO_NAME}/contentful/${VERSION}/\">" > $PAGES_DIR/index.html
+rm -rf $PAGES_DIR/$NAMESPACE/latest
+cp -r $DOCS_DIR/$NAMESPACE/$VERSION $PAGES_DIR/$NAMESPACE/latest
+echo "<meta http-equiv=\"refresh\" content=\"0; url=https://contentful.github.io/${REPO_NAME}/${NAMESPACE}/${VERSION}/\">" > $PAGES_DIR/index.html
 
 pushd $PAGES_DIR
 git add .
