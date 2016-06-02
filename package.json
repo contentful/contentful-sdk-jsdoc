@@ -14,7 +14,8 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "files": [
-    "jsdoc*"
+    "jsdoc*",
+    "bin"
   ],
   "dependencies": {
   },
