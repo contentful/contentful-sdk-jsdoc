@@ -20,14 +20,19 @@ if [ ! -d $PAGES_DIR ] ; then
   git clone --single-branch --branch gh-pages $REPO $PAGES_DIR
 fi
 
-cp -r $DOCS_DIR/* $PAGES_DIR
+mkdir $PAGES_DIR/$NAMESPACE/$VERSION
+
+cp -r $DOCS_DIR/* $PAGES_DIR/$NAMESPACE/$VERSION
+
 rm -rf $PAGES_DIR/$NAMESPACE/latest
-cp -r $DOCS_DIR/$NAMESPACE/$VERSION $PAGES_DIR/$NAMESPACE/latest
+
+cp -r $PAGES_DIR/$NAMESPACE/$VERSION $PAGES_DIR/$NAMESPACE/latest
+
 echo "<meta http-equiv=\"refresh\" content=\"0; url=https://contentful.github.io/${REPO_NAME}/${NAMESPACE}/${VERSION}/\">" > $PAGES_DIR/index.html
 
 pushd $PAGES_DIR
 git add .
-git commit -a -m "Docs update"
+git commit -a -m "Docs update for $VERSION"
 if [ $? -eq 1 ] ; then
   echo "Nothing to update"
 else
