@@ -7,15 +7,15 @@ var self = this;
     <h2>Constructor</h2>
     <?js } ?>
 
-    <h4 class="name" id="<?js= id ?>">
-      <?js= data.attribs + (kind === 'class' ? 'new ' : '') + name + (data.signature || '') ?>
-      <a href="#<?js= id ?>">#</a>
-    </h4>
+    <h4 class="name" id="<?js= id ?>"><?js= data.attribs + (kind === 'class' ? 'new ' : '') +
+    name + (data.signature || '') ?></h4>
 
     <?js if (data.summary) { ?>
     <p class="summary"><?js= summary ?></p>
     <?js } ?>
 <?js } ?>
+
+<?js= this.partial('details.tmpl', data) ?>
 
 <?js if (data.kind !== 'module' && data.description) { ?>
 <div class="description">
@@ -29,15 +29,22 @@ var self = this;
 <?js } ?>
 
 <?js if (kind === 'event' && data.type && data.type.names) {?>
-  <dl class="types">
-    <dt><strong>Type:</strong></dt>
-    <dd> <?js= self.partial('type.tmpl', data.type.names) ?> </dd>
-  </dl>
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            <?js= self.partial('type.tmpl', data.type.names) ?>
+        </li>
+    </ul>
 <?js } ?>
 
 <?js if (data['this']) { ?>
     <h5>This:</h5>
     <ul><li><?js= this.linkto(data['this'], data['this']) ?></li></ul>
+<?js } ?>
+
+<?js if (data.examples && examples.length) { ?>
+    <h5>Example<?js= examples.length > 1? 's':'' ?></h5>
+    <?js= this.partial('examples.tmpl', examples) ?>
 <?js } ?>
 
 <?js if (data.params && params.length) { ?>
@@ -97,9 +104,3 @@ var self = this;
     <?js });
 } } ?>
 
-<?js= this.partial('details.tmpl', data) ?>
-
-<?js if (data.examples && examples.length) { ?>
-    <h5>Example<?js= examples.length > 1? 's':'' ?></h5>
-    <?js= this.partial('examples.tmpl', examples) ?>
-<?js } ?>

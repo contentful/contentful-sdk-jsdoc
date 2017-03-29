@@ -93,7 +93,7 @@
             <?js if (props.hasDefault) {?>
                 <td class="default">
                 <?js if (typeof prop.defaultvalue !== 'undefined') { ?>
-                    <?js= self.htmlsafe(prop.defaultvalue) ?>
+                    <code><?js= self.htmlsafe(prop.defaultvalue) ?></code>
                 <?js } ?>
                 </td>
             <?js } ?>

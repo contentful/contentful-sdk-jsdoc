@@ -1,7 +1,7 @@
+/*global env: true */
 'use strict';
 
 var doop = require('jsdoc/util/doop');
-var env = require('jsdoc/env');
 var fs = require('jsdoc/fs');
 var helper = require('jsdoc/util/templateHelper');
 var logger = require('jsdoc/util/logger');
@@ -136,7 +136,6 @@ function addNonParamAttributes(items) {
 
 function addSignatureParams(f) {
     var params = f.params ? addParamAttributes(f.params) : [];
-
     f.signature = util.format( '%s(%s)', (f.signature || ''), params.join(', ') );
 }
 
@@ -206,11 +205,11 @@ function getPathFromDoclet(doclet) {
         doclet.meta.filename;
 }
 
-function generate(title, docs, filename, resolveLinks) {
+function generate(type, title, docs, filename, resolveLinks) {
     resolveLinks = resolveLinks === false ? false : true;
 
     var docData = {
-        env: env,
+        type: type,
         title: title,
         docs: docs
     };
@@ -243,8 +242,7 @@ function generateSourceFiles(sourceFiles, encoding) {
             logger.error('Error while generating source file %s: %s', file, e.message);
         }
 
-        generate('Source: ' + sourceFiles[file].shortened, [source], sourceOutfile,
-            false);
+        generate('Source', sourceFiles[file].shortened, [source], sourceOutfile, false);
     });
 }
 
@@ -292,22 +290,46 @@ function attachModuleSymbols(doclets, modules) {
 function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
     var nav = '';
 
-    if (items.length) {
+    if (items && items.length) {
         var itemsNav = '';
 
         items.forEach(function(item) {
-            if ( !hasOwnProp.call(item, 'longname') ) {
-                itemsNav += '<li>' + linktoFn('', item.name) + '</li>';
-            }
-            else if ( !hasOwnProp.call(itemsSeen, item.longname) ) {
-                var displayName;
-                if (env.conf.templates.default.useLongnameInNav) {
-                    displayName = item.longname;
-                } else {
-                    displayName = item.name;
-                }
-                itemsNav += '<li>' + linktoFn(item.longname, displayName.replace(/\b(module|event):/g, '')) + '</li>';
+            var methods = find({kind:'function', memberof: item.longname});
+            var members = find({kind:'member', memberof: item.longname});
+            var docdash = env && env.conf && env.conf.docdash || {};
 
+            if ( !hasOwnProp.call(item, 'longname') ) {
+                itemsNav += '<li>' + linktoFn('', item.name);
+                itemsNav += '</li>';
+            } else if ( !hasOwnProp.call(itemsSeen, item.longname) ) {
+                itemsNav += '<li>' + linktoFn(item.longname, item.name.replace(/^module:/, ''));
+
+                if (docdash.static && members.find(function (m) { return m.scope === 'static'; } )) {
+                    itemsNav += "<ul class='members'>";
+
+                    members.forEach(function (member) {
+                        if (!member.scope === 'static') return;
+                        itemsNav += "<li data-type='member'>";
+                        itemsNav += linkto(member.longname, member.name);
+                        itemsNav += "</li>";
+                    });
+
+                    itemsNav += "</ul>";
+                }
+
+                if (methods.length) {
+                    itemsNav += "<ul class='methods'>";
+
+                    methods.forEach(function (method) {
+                        itemsNav += "<li data-type='method'>";
+                        itemsNav += linkto(method.longname, method.name);
+                        itemsNav += "</li>";
+                    });
+
+                    itemsNav += "</ul>";
+                }
+
+                itemsNav += '</li>';
                 itemsSeen[item.longname] = true;
             }
         });
@@ -340,16 +362,18 @@ function linktoExternal(longName, name) {
  * @param {array<object>} members.tutorials
  * @param {array<object>} members.events
  * @param {array<object>} members.interfaces
- * @return {string} The HTML for the navigation sidebar.
+ * @return {s
+ ring} The HTML for the navigation sidebar.
  */
+
 function buildNav(members) {
     var nav = '<h2><a href="index.html">Home</a></h2>';
     var seen = {};
     var seenTutorials = {};
 
+    nav += buildMemberNav(members.classes, 'Classes', seen, linkto);
     nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
     nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
-    nav += buildMemberNav(members.classes, 'Classes', seen, linkto);
     nav += buildMemberNav(members.events, 'Events', seen, linkto);
     nav += buildMemberNav(members.namespaces, 'Namespaces', seen, linkto);
     nav += buildMemberNav(members.mixins, 'Mixins', seen, linkto);
@@ -384,6 +408,7 @@ function buildNav(members) {
     @param {Tutorial} tutorials
  */
 exports.publish = function(taffyData, opts, tutorials) {
+    var docdash = env && env.conf && env.conf.docdash || {};
     data = taffyData;
 
     var conf = env.conf.templates || {};
@@ -410,7 +435,8 @@ exports.publish = function(taffyData, opts, tutorials) {
     helper.setTutorials(tutorials);
 
     data = helper.prune(data);
-    data.sort('longname, version, since');
+
+    docdash.sort !== false && data.sort('longname, version, since');
     helper.addEventListeners(data);
 
     var sourceFiles = {};
@@ -457,7 +483,6 @@ exports.publish = function(taffyData, opts, tutorials) {
     var packageInfo = ( find({kind: 'package'}) || [] ) [0];
     if (packageInfo && packageInfo.name) {
         outdir = path.join( outdir, packageInfo.name, (packageInfo.version || '') );
-        env.package = packageInfo;
     }
     fs.mkPath(outdir);
 
@@ -485,10 +510,7 @@ exports.publish = function(taffyData, opts, tutorials) {
         staticFileScanner = new (require('jsdoc/src/scanner')).Scanner();
 
         staticFilePaths.forEach(function(filePath) {
-            var extraStaticFiles;
-
-            filePath = path.resolve(env.pwd, filePath);
-            extraStaticFiles = staticFileScanner.scan([filePath], 10, staticFileFilter);
+            var extraStaticFiles = staticFileScanner.scan([filePath], 10, staticFileFilter);
 
             extraStaticFiles.forEach(function(fileName) {
                 var sourcePath = fs.toDir(filePath);
@@ -554,8 +576,9 @@ exports.publish = function(taffyData, opts, tutorials) {
     members.tutorials = tutorials.children;
 
     // output pretty-printed source files by default
-    var outputSourceFiles = conf.default && conf.default.outputSourceFiles !== false ? true :
-        false;
+    var outputSourceFiles = conf.default && conf.default.outputSourceFiles !== false
+        ? true
+        : false;
 
     // add template helpers
     view.find = find;
@@ -574,13 +597,15 @@ exports.publish = function(taffyData, opts, tutorials) {
         generateSourceFiles(sourceFiles, opts.encoding);
     }
 
-    if (members.globals.length) { generate('Global', [{kind: 'globalobj'}], globalUrl); }
+    if (members.globals.length) {
+        generate('', 'Global', [{kind: 'globalobj'}], globalUrl);
+    }
 
     // index page displays information from package.json and lists files
-    var files = find({kind: 'file'}),
-        packages = find({kind: 'package'});
+    var files = find({kind: 'file'});
+    var packages = find({kind: 'package'});
 
-    generate(opts.mainpagetitle || 'Home',
+    generate('', 'Home',
         packages.concat(
             [{kind: 'mainpage', readme: opts.readme, longname: (opts.mainpagetitle) ? opts.mainpagetitle : 'Main Page'}]
         ).concat(files),
@@ -597,32 +622,32 @@ exports.publish = function(taffyData, opts, tutorials) {
     Object.keys(helper.longnameToUrl).forEach(function(longname) {
         var myModules = helper.find(modules, {longname: longname});
         if (myModules.length) {
-            generate('Module: ' + myModules[0].name, myModules, helper.longnameToUrl[longname]);
+            generate('Module', myModules[0].name, myModules, helper.longnameToUrl[longname]);
         }
 
         var myClasses = helper.find(classes, {longname: longname});
         if (myClasses.length) {
-            generate('Class: ' + myClasses[0].name, myClasses, helper.longnameToUrl[longname]);
+            generate('Class', myClasses[0].name, myClasses, helper.longnameToUrl[longname]);
         }
 
         var myNamespaces = helper.find(namespaces, {longname: longname});
         if (myNamespaces.length) {
-            generate('Namespace: ' + myNamespaces[0].name, myNamespaces, helper.longnameToUrl[longname]);
+            generate('Namespace', myNamespaces[0].name, myNamespaces, helper.longnameToUrl[longname]);
         }
 
         var myMixins = helper.find(mixins, {longname: longname});
         if (myMixins.length) {
-            generate('Mixin: ' + myMixins[0].name, myMixins, helper.longnameToUrl[longname]);
+            generate('Mixin', myMixins[0].name, myMixins, helper.longnameToUrl[longname]);
         }
 
         var myExternals = helper.find(externals, {longname: longname});
         if (myExternals.length) {
-            generate('External: ' + myExternals[0].name, myExternals, helper.longnameToUrl[longname]);
+            generate('External', myExternals[0].name, myExternals, helper.longnameToUrl[longname]);
         }
 
         var myInterfaces = helper.find(interfaces, {longname: longname});
         if (myInterfaces.length) {
-            generate('Interface: ' + myInterfaces[0].name, myInterfaces, helper.longnameToUrl[longname]);
+            generate('Interface', myInterfaces[0].name, myInterfaces, helper.longnameToUrl[longname]);
         }
     });
 
@@ -635,12 +660,11 @@ exports.publish = function(taffyData, opts, tutorials) {
             children: tutorial.children
         };
 
-        var tutorialPath = path.join(outdir, filename),
-            html = view.render('tutorial.tmpl', tutorialData);
+        var tutorialPath = path.join(outdir, filename);
+        var html = view.render('tutorial.tmpl', tutorialData);
 
         // yes, you can use {@link} in tutorials too!
         html = helper.resolveLinks(html); // turn {@link foo} into <a href="foodoc.html">foo</a>
-
         fs.writeFileSync(tutorialPath, html, 'utf8');
     }
 
@@ -651,5 +675,6 @@ exports.publish = function(taffyData, opts, tutorials) {
             saveChildren(child);
         });
     }
+
     saveChildren(tutorials);
 };
