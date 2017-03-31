@@ -11,7 +11,7 @@ html, body {
 
 body {
   color: #4d4e53;
-  background-color: #e2e7ea;
+  background-color: #fff;
   margin: 0 auto;
   padding: 0 20px;
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
@@ -83,8 +83,8 @@ h4 {
 }
 
 h4.name {
-  color: #fff;
-  background: #21304B;
+  color: #000;
+  background: #f7f9fa;
   box-shadow: 0 .25em .5em #d3d3d3;
   border-top: 1px solid #d3d3d3;
   border-bottom: 1px solid #d3d3d3;
@@ -142,7 +142,7 @@ header {
 
 section {
   display: block;
-  background-color: #e2e7ea;
+  background-color: #fff;
   padding: 0 0 0 30px;
 }
 
@@ -250,7 +250,7 @@ nav > ul {
 }
 
 nav > ul > li > a {
-  color: #1683d0;
+  color: #8091a5;
 }
 
 nav ul ul {
@@ -318,7 +318,7 @@ footer {
 }
 
 .type-signature:last-child {
-  color: #eee;
+  color: #000;
 }
 
 .name, .signature {
@@ -385,14 +385,13 @@ footer {
   line-height: 18px;
   display: block;
   background-color: #0d152a;
-  color: #aeaeae;
+  color: ##536171;
 }
 
 .prettyprint code {
   line-height: 18px;
   display: block;
-  background-color: #0d152a;
-  color: #4D4E53;
+  background-color: #f7f9fa;
 }
 
 .prettyprint > code {

@@ -20,8 +20,9 @@ if [ ! -d $PAGES_DIR ] ; then
   git clone --single-branch --branch gh-pages $REPO $PAGES_DIR
 fi
 
-mkdir $PAGES_DIR/$NAMESPACE/$VERSION
-
+if ! [ -d $PAGES_DIR/$NAMESPACE/$VERSION ] ; then
+  mkdir $PAGES_DIR/$NAMESPACE/$VERSION
+fi
 cp -r $DOCS_DIR/* $PAGES_DIR/$NAMESPACE/$VERSION
 
 rm -rf $PAGES_DIR/$NAMESPACE/latest
