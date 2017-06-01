@@ -133,18 +133,6 @@
             <?js= self.partial('members.tmpl', p) ?>
         <?js }); ?>
     <?js } ?>
-
-    <?js
-        var methods = self.find({kind: 'function', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
-        if (methods && methods.length && methods.forEach) {
-    ?>
-        <h3 class="subsection-title">Methods</h3>
-
-        <?js methods.forEach(function(m) { ?>
-            <?js= self.partial('method.tmpl', m) ?>
-        <?js }); ?>
-    <?js } ?>
-
     <?js
         var typedefs = self.find({kind: 'typedef', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
         if (typedefs && typedefs.length && typedefs.forEach) {
@@ -164,6 +152,18 @@
                 }
             }); ?>
     <?js } ?>
+    
+    <?js
+        var methods = self.find({kind: 'function', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
+        if (methods && methods.length && methods.forEach) {
+    ?>
+        <h3 class="subsection-title">Methods</h3>
+
+        <?js methods.forEach(function(m) { ?>
+            <?js= self.partial('method.tmpl', m) ?>
+        <?js }); ?>
+    <?js } ?>
+
 
     <?js
         var events = self.find({kind: 'event', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
