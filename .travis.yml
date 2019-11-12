@@ -4,7 +4,7 @@ before_install:
   - npm set progress=false
 language: node_js
 node_js:
-  - "4.3"
+  - "8.16"
 after_success:
   - npm run semantic-release
 branches:
