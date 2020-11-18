@@ -23,7 +23,7 @@
     "cz-conventional-changelog": "^2.0.0",
     "jsdoc": "^3.6.3",
     "json": "^9.0.6",
-    "semantic-release": "^15.13.30"
+    "semantic-release": "^17.2.3"
   },
   "config": {
     "commitizen": {
