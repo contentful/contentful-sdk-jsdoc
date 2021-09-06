@@ -14,10 +14,7 @@
     "test": "true",
     "semantic-release": "semantic-release"
   },
-  "files": [
-    "jsdoc*",
-    "bin"
-  ],
+  "files": ["jsdoc*", "bin"],
   "dependencies": {},
   "devDependencies": {
     "cz-conventional-changelog": "^2.0.0",
@@ -29,5 +26,26 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "release": {
+    "branches": ["master"],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "releaseRules": [
+            {
+              "type": "build",
+              "scope": "deps",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/changelog",
+      "@semantic-release/github"
+    ]
   }
 }
