@@ -21,7 +21,7 @@
   "dependencies": {},
   "devDependencies": {
     "cz-conventional-changelog": "^2.0.0",
-    "jsdoc": "^3.6.3",
+    "jsdoc": "^3.6.7",
     "json": "^9.0.6",
     "semantic-release": "^15.13.30"
   },
