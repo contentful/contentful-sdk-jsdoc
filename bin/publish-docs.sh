@@ -33,7 +33,7 @@ echo "<meta http-equiv=\"refresh\" content=\"0; url=https://contentful.github.io
 
 pushd $PAGES_DIR
 git add .
-git commit -a -m "Docs update for $VERSION"
+git commit -a -m "Docs update for $VERSION [skip ci]"
 if [ $? -eq 1 ] ; then
   echo "Nothing to update"
 else
