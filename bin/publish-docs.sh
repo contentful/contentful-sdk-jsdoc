@@ -5,7 +5,7 @@ REPO_NAME=$1
 NAMESPACE=$2
 PAGES_DIR=./gh-pages
 DOCS_DIR=./out
-if [[ -z "${GH_TOKEN}" ]]; then
+if [[ -z "${GH_TOKEN}" ]]; then # Check if GH_TOKEN is empty
   TOKEN_GITHUB="${GITHUB_TOKEN}"
 else
   TOKEN_GITHUB="${GH_TOKEN}"
