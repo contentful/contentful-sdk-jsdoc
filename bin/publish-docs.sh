@@ -5,7 +5,12 @@ REPO_NAME=$1
 NAMESPACE=$2
 PAGES_DIR=./gh-pages
 DOCS_DIR=./out
-REPO="https://${GH_TOKEN}@github.com/contentful/${REPO_NAME}.git"
+if [[ -z "${GH_TOKEN}" ]]; then
+  TOKEN_GITHUB="${GITHUB_TOKEN}"
+else
+  TOKEN_GITHUB="${GH_TOKEN}"
+fi
+REPO="https://${TOKEN_GITHUB}@github.com/contentful/${REPO_NAME}.git"
 VERSION=`cat package.json|json version`
 
 echo "Publishing docs"
