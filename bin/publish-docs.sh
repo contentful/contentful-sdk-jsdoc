@@ -5,12 +5,13 @@ REPO_NAME=$1
 NAMESPACE=$2
 PAGES_DIR=./gh-pages
 DOCS_DIR=./out
-if [[ -z "${GH_TOKEN}" ]]; then # Check if GH_TOKEN is empty
-  TOKEN_GITHUB="${GITHUB_TOKEN}"
-else
-  TOKEN_GITHUB="${GH_TOKEN}"
+if [[ -n "${GITHUB_TOKEN}" ]]; then # If the GITHUB_TOKEN (which is an app token) is not empty we use an app token auth URL
+  REPO="https://x-access-token:${GITHUB_TOKEN}@github.com/contentful/${REPO_NAME}.git"
+else # Legacy variant
+  REPO="https://${GH_TOKEN}@github.com/contentful/${REPO_NAME}.git"
 fi
-REPO="https://${TOKEN_GITHUB}@github.com/contentful/${REPO_NAME}.git"
+
+
 VERSION=`cat package.json|json version`
 
 echo "Publishing docs"
