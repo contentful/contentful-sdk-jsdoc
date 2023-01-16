@@ -18,7 +18,9 @@
     "jsdoc*",
     "bin"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "taffydb": "^2.7.3"
+  },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.0",
     "cz-conventional-changelog": "^3.3.0",
