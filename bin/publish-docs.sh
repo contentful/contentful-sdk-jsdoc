@@ -12,7 +12,7 @@ else # Legacy variant
 fi
 
 
-VERSION=`cat package.json|json version`
+VERSION=$(cat package.json | jq -r .version)
 
 echo "Publishing docs"
 
