@@ -14,7 +14,7 @@ updates:
         - ">=5.0.0"
     - dependency-name: semantic-release
       versions:
-        - ">21.0.9"
+        - ">23.0.0"
     commit-message:
       prefix: build
       include: scope
