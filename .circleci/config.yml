@@ -6,7 +6,7 @@ orbs:
 jobs:
   release:
     docker:
-      - image: cimg/node:18.12.1
+      - image: cimg/node:18.18.0
     steps:
       - checkout
       - vault/get-secrets: # Loads vault secrets
