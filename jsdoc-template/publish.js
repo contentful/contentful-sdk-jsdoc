@@ -6,7 +6,8 @@ var fs = require('jsdoc/fs');
 var helper = require('jsdoc/util/templateHelper');
 var logger = require('jsdoc/util/logger');
 var path = require('jsdoc/path');
-var taffy = require('taffydb').taffy;
+// https://github.com/jsdoc/jsdoc/tree/main/packages/jsdoc-salty#use-salty-in-a-jsdoc-template
+var taffy = require('@jsdoc/salty').taffy;
 var template = require('jsdoc/template');
 var util = require('util');
 
