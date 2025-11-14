@@ -1,20 +1,20 @@
 version: 2
-
 updates:
-  - package-ecosystem: npm
-    directory: "/"
+  # Enable version updates for npm
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: daily
-      time: "00:00"
-      timezone: UTC
+      interval: 'weekly'
+      day: 'monday'
     open-pull-requests-limit: 10
+    reviewers:
+      - 'contentful/team-developer-experience'
+    labels:
+      - 'dependencies'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
     ignore:
     - dependency-name: husky
       versions:
         - ">=5.0.0"
-    - dependency-name: semantic-release
-      versions:
-        - ">23.0.0"
-    commit-message:
-      prefix: build
-      include: scope
