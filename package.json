@@ -34,7 +34,7 @@
     "branches": [
       "master",
       {
-        "name": "dx-546-update-to-gha",
+        "name": "dev",
         "channel": "dev",
         "prerelease": true
       }

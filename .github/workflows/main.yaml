@@ -9,7 +9,7 @@ on:
 jobs:
 
   release:
-    if: github.event_name == 'push' && contains(fromJSON('["refs/heads/master", "refs/heads/dx-546-update-to-gha"]'), github.ref)
+    if: github.event_name == 'push' && contains(fromJSON('["refs/heads/master", "refs/heads/dev"]'), github.ref)
     permissions:
       contents: write
       id-token: write
