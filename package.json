@@ -23,7 +23,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "jsdoc": "^4.0.0",
     "json": "^11.0.0",
-    "semantic-release": "^23.0.0"
+    "semantic-release": "^25.0.2"
   },
   "config": {
     "commitizen": {
@@ -32,7 +32,12 @@
   },
   "release": {
     "branches": [
-      "master"
+      "master",
+      {
+        "name": "dev",
+        "channel": "dev",
+        "prerelease": true
+      }
     ],
     "plugins": [
       [
