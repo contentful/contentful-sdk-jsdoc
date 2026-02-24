@@ -37,11 +37,6 @@
         "name": "dev",
         "channel": "dev",
         "prerelease": true
-      },
-      {
-        "name": "chore/dx-729",
-        "channel": "alpha",
-        "prerelease": "alpha"
       }
     ],
     "plugins": [
