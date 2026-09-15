@@ -59,7 +59,7 @@ the value on `master` is intentionally stale (see ARCHITECTURE.md).
    prereleases on the `dev` npm channel.
 2. Fill in `.github/PULL_REQUEST_TEMPLATE.md`.
 3. `.github/CODEOWNERS` requests review from
-   `@contentful/team-developer-experience` automatically.
+   `@contentful/group-applied-ai-solutions` automatically.
 4. CI on a PR is limited: the release job is skipped for non-`master`/`dev`
    pushes, and the CodeQL job only runs when files under `.github/workflows/`
    change. A green PR therefore does not mean your change was tested.
